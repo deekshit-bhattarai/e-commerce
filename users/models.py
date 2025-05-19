@@ -9,9 +9,11 @@ from users.managers import CustomUserManager
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_("email address"), unique=True)
+    address = models.CharField(max_length=200)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    # profile_image = models.ImageField("API/profile-images", default=)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
