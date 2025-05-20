@@ -1,8 +1,10 @@
 from typing import override
+from django.db.models.signals import post_save
 import uuid
 from django.db.models import Avg, UniqueConstraint, constraints
 from uuid import uuid4
 from django.utils.text import slugify
+from django.dispatch import receiver
 
 from django.conf import settings
 from django.db import models
@@ -36,7 +38,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=200)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.user.email
 
 
@@ -66,7 +68,6 @@ class Category(models.Model):
 
 
 class ProductSize(models.Model):
-
     size = models.CharField(max_length=210, unique=True)
 
     def __str__(self):
@@ -74,7 +75,6 @@ class ProductSize(models.Model):
 
 
 class ProductColor(models.Model):
-
     color = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -206,17 +206,26 @@ class OrderItem(models.Model):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE)
+    user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, null=True)
     id = models.BigAutoField(primary_key=True)
     cart_id = models.UUIDField(unique=True, null=True, default=uuid.uuid4)
+    session_key = models.CharField(max_length=40, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user}'s Cart"
+        if self.user:
+            return f"{self.user}'s Cart"
+        return f"Anonymous Cart {self.cart_id}"
+
+    @property
+    def total_price(self):
+        return sum(item.item_subtotal for item in self.cartitem_set.all())
 
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(ProductVariant, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     @property
@@ -226,3 +235,9 @@ class CartItem(models.Model):
     @override
     def __str__(self):
         return f"{self.quantity} x {self.product.name} in cart of {self.cart.user}"
+
+
+@receiver(post_save, sender=UserProfile)
+def create_user_cart(sender, instance, created, **kwargs):
+    if created:
+        Cart.objects.create(user=instance)

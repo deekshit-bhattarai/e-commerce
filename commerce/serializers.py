@@ -1,4 +1,3 @@
-from django.db.models import Avg
 from rest_framework import serializers
 from .models import (
     Cart,
@@ -187,14 +186,33 @@ class OrderWriteSerializer(serializers.ModelSerializer):
         fields = ["status"]
 
 
-class CartItemReadSerializer(serializers.ModelSerializer):
+class CartItemSerializer(serializers.ModelSerializer):
+    product = ProductReadSerializer()
+
     class Meta:
         model = CartItem
-        fields = "__all__"
-        read_only_fields = ["id"]
+        fields = ["id", "product", "quantity", "item_subtotal"]
+
+    def create(self, validated_data):
+        cart = self.context["cart"]
+        product_id = validated_data.pop("product.id")
+        product = ProductVariant.objects.get(id=product_id)
+
+        # Checking if product already exists in the cart
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={"quantity": validated_data.get("quantity", 1)},
+        )
+
+        if not created:
+            cart_item.quantity += validated_data.get("quantity", 1)
+            cart_item.save()
 
 
-class CartItemWriteSerializer(serializers.ModelSerializer):
+class CartSerializer(serializers.ModelSerializer):
+    items = CartItemSerializer()
+
     class Meta:
-        model = CartItem
-        fields = ["cart", "product", "quantity"]
+        model = Cart
+        fields = ["cart_id", "items", "created_at", "updated_at"]
