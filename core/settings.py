@@ -39,10 +39,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "django_rename_app",
     "rest_framework_simplejwt",
     "rest_framework",
     "commerce",
     "users",
+    "order",
+    "product",
+    "cart",
 ]
 
 MIDDLEWARE = [
