@@ -42,11 +42,12 @@ INSTALLED_APPS = [
     "django_rename_app",
     "rest_framework_simplejwt",
     "rest_framework",
+    "cart",
     "commerce",
-    "users",
+    # "commerce.apps.CommerceConfig",
     "order",
     "product",
-    "cart",
+    "users",
 ]
 
 MIDDLEWARE = [
