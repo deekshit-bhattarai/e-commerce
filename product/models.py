@@ -1,8 +1,7 @@
 from django.db import models
-from django.db.models import Avg, UniqueConstraint
+from django.db.models import UniqueConstraint
 from django.utils.text import slugify
 
-# from commerce.models import UserComment, UserReview
 
 
 class Category(models.Model):
@@ -52,8 +51,6 @@ class Product(models.Model):
     discount_price = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
-    # color = models.ForeignKey(ProductColor, on_delete=models.CASCADE, default=1)
 
     class Meta:
         ordering = ["-created_at"]
@@ -62,16 +59,19 @@ class Product(models.Model):
     def in_stock(self):
         return self.variants.filter(stock__gt=0).exists()
 
-    # def total_number_of_comment(self):
-    #     return UserComment.objects.filter(product=self).count()
+    def total_number_of_comment(self):
+        from commerce.models import UserComment
+        return UserComment.objects.filter(product=self).count()
     #
-    # def total_number_of_review(self):
-    #     return UserReview.objects.filter(product=self).count()
+    def total_number_of_review(self):
+        from commerce.models import UserReview
+        return UserReview.objects.filter(product=self).count()
     #
-    # def average_product_review(self):
-    #     return UserReview.objects.filter(product=self).aggregate(Avg("stars"))[
-    #         "stars__avg"
-    #     ]
+    def average_product_review(self):
+        from commerce.models import UserReview
+        return UserReview.objects.filter(product=self).aggregate(Avg("stars"))[
+            "stars__avg"
+        ]
 
     def __str__(self):
         return self.name
@@ -101,6 +101,3 @@ class ProductVariant(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     images = models.FileField("API/product_images", max_length=100, null=True)
-
-
-# Create your models here.
