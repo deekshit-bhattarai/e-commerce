@@ -4,6 +4,8 @@ from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 
 from rest_framework import viewsets, status
+
+
 from rest_framework.response import Response
 from .services import CartService
 from .models import CartItem
@@ -61,7 +63,7 @@ class CartViewSet(viewsets.GenericViewSet):
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["patch"])
     def update_item(self, request):
         """Update cart item quantity"""
         item_id = request.data.get("item_id")
@@ -91,7 +93,7 @@ class CartViewSet(viewsets.GenericViewSet):
                 {"error": "Cart item not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["delete"])
     def remove_item(self, request):
         """Remove item from cart"""
         item_id = request.data.get("item_id")
