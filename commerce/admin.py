@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import (
     UserComment,
     UserProfile,
-    UserReview,
 )
 
 
@@ -24,7 +23,6 @@ from .models import (
 #         "in_stock",
 #     )
 #
-#
 # class ProductCommentInline(admin.TabularInline):
 #
 #     model = UserComment
@@ -34,7 +32,9 @@ from .models import (
 # class ProductImageInline(admin.TabularInline):
 #     model = ProductImage
 #     extra = 1
-#
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['comment_user', 'content_type', 'created_at', 'content_object', 'object_id']
+
 #
 # class ProductAdmin(admin.ModelAdmin):
 #     inlines = [
@@ -48,4 +48,5 @@ from .models import (
 #     [Category, ProductColor, ProductSize, Cart, CartItem, UserComment, UserReview]
 # )
 # admin.site.register(Product, ProductAdmin)
-# admin.site.register(UserProfile)
+admin.site.register(UserProfile)
+admin.site.register(UserComment, CommentAdmin)
