@@ -3,7 +3,6 @@ from django.db.models import UniqueConstraint
 from django.utils.text import slugify
 
 
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -61,14 +60,19 @@ class Product(models.Model):
 
     def total_number_of_comment(self):
         from commerce.models import UserComment
+
         return UserComment.objects.filter(product=self).count()
+
     #
     def total_number_of_review(self):
         from commerce.models import UserReview
+
         return UserReview.objects.filter(product=self).count()
+
     #
     def average_product_review(self):
         from commerce.models import UserReview
+
         return UserReview.objects.filter(product=self).aggregate(Avg("stars"))[
             "stars__avg"
         ]
@@ -95,7 +99,7 @@ class ProductVariant(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.price}"
+        return f"{self.product.name}"
 
 
 class ProductImage(models.Model):
