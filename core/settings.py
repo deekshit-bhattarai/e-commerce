@@ -43,9 +43,10 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework",
     "cart",
-    "commerce",
-    # "commerce.apps.CommerceConfig",
-    "order",
+    # "commerce",
+    "commerce.apps.CommerceConfig",
+    "order.apps.OrderConfig",
+    # "order",
     "product",
     "users",
 ]
