@@ -7,7 +7,7 @@ from product.models import ProductVariant
 class CartService:
     @staticmethod
     def get_or_create_cart(request):
-        breakpoint()
+        # breakpoint()
         if request.user.is_authenticated:
             user_profile = getattr(request.user, "userprofile", None)
             if user_profile:

@@ -20,10 +20,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        breakpoint()
         val_pass = validated_data.pop("password")
         password = make_password(val_pass)
         user = UserProfile.objects.create(
             email=validated_data["email"], password=password
         )
         return user
+

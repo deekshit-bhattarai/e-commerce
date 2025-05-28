@@ -24,7 +24,7 @@ class UserComment(models.Model):
     )
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveBigIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")
 
     def __str__(self):
         return f"{self.comment_user.user} | {self.content_type}"
@@ -50,4 +50,5 @@ class UserReview(models.Model):
 def create_user_cart(sender, instance, created, **kwargs):
     if created:
         from cart.models import Cart
+
         Cart.objects.create(user=instance)
