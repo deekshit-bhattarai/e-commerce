@@ -38,3 +38,12 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x  in Order {self.order.order_id}"
+class OrderHistory(models.Model):
+    order = models.OneToOneField(
+        Order, on_delete=models.CASCADE, related_name="completion_log"
+    )
+    completed_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    completed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Log for {self.order.order_id}"
