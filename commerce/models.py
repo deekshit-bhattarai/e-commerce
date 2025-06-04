@@ -8,6 +8,24 @@ from django.dispatch import receiver
 from product import models as product_app_model
 
 
+# class UserLoginActivity(models.Model):
+#     SUCCESS = "S"
+#     FAILURE = "F"
+#
+#     LOGIN_STATUS = [(SUCCESS, "Success"), (FAILURE, "Failure")]
+#
+#     login_IP = models.GenericIPAddressField(null=True, blank=True)
+#     login_datetime = models.DateTimeField(auto_now=True)
+#     login_username = models.CharField(max_length=100)
+#     status = models.CharField(
+#         max_length=1, default=SUCCESS, choices=LOGIN_STATUS, null=True, blank=True
+#     )
+#
+#     class Meta:
+#         verbose_name = "user_login_activity"
+#         verbose_name_plural = "user_login_activities"
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address = models.CharField(max_length=200)
