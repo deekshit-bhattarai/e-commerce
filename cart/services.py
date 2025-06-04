@@ -7,30 +7,34 @@ from product.models import ProductVariant
 class CartService:
     @staticmethod
     def get_or_create_cart(request):
-        # breakpoint()
         if request.user.is_authenticated:
             user_profile = getattr(request.user, "userprofile", None)
             if user_profile:
                 cart, created = Cart.objects.get_or_create(user=user_profile)
                 return cart
 
-        if not request.COOKIE.get("session_key"):
+        breakpoint()
+        cart_id = request.session.get("cart_id")
+        # breakpoint()
+        if not request.session.get("cart_id"):
+            cart_id = str(uuid4())
+            request.session["cart_id"] = cart_id
             request.session.save()
 
-        session_key = request.COOKIE.get("session_key")
         cart, created = Cart.objects.get_or_create(
-            session_key=session_key, user=None, cart_id=uuid4()
+            cart_id=cart_id,
+            user=None,
         )
         return cart
 
     @staticmethod
     def transfer_anonymous_cart_to_user(request, user_profile):
-        if not request.COOKIES.get("session_key"):
+        cart_id = request.session.get("cart_id")
+        if not cart_id:
             return None
-        session_key = request.COOKIES.get("session_key")
 
         try:
-            anonymous_cart = Cart.objects.get(session_key=session_key, user=None)
+            anonymous_cart = Cart.objects.get(cart_id=cart_id, user=None)
             user_cart, created = Cart.objects.get_or_create(user=user_profile)
 
             for item in anonymous_cart.cartitem_set.all():

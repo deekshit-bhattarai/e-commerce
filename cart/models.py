@@ -10,7 +10,7 @@ class Cart(models.Model):
     user = models.OneToOneField(UserProfile, on_delete=models.CASCADE, null=True)
     id = models.BigAutoField(primary_key=True)
     cart_id = models.UUIDField(unique=True, null=True, default=uuid.uuid4)
-    session_key = models.CharField(max_length=40, null=True, blank=True)
+    # session_key = models.CharField(max_length=40, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -23,6 +23,10 @@ class Cart(models.Model):
     def total_price(self):
         return sum(item.item_subtotal for item in self.cartitem_set.all())
 
+    @property
+    def items(self):
+        return self.cartitem_set.all()
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
@@ -34,7 +38,12 @@ class CartItem(models.Model):
         return self.product.price * self.quantity
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in cart of {self.cart.user}"
+        user_info = (
+            self.cart.user.user.email
+            if self.cart.user and hasattr(self.cart.user, "user")
+            else "anonymous"
+        )
+        return f"{self.quantity} x {self.product.product.name} in cart of {user_info}"
 
 
 # Create your models here.
