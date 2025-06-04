@@ -152,6 +152,42 @@ class ProductVariantReadSerializer(serializers.ModelSerializer):
         ]
 
 
+class ProductReadForCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "name",
+            "description",
+            "discount_price",
+        ]
+
+
+class ProductVariantForCartSerializer(serializers.ModelSerializer):
+    product = ProductReadForCartSerializer(read_only=True)
+    size = ProductSizeSerializer(read_only=True)
+    color = ProductColorSerializer(read_only=True)
+    name = serializers.CharField(source="product.name", read_only=True)
+
+    class Meta:
+        model = ProductVariant
+        fields = [
+            "id",
+            "product",
+            "name",
+            "price",
+            "size",
+            "color",
+        ]
+        read_only_fields = [
+            "id",
+            "product",
+            "price",
+            "size",
+            "color",
+        ]
+
+
 # class ProductWriteSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Product
