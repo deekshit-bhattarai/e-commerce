@@ -58,7 +58,7 @@ class OrderHistory(models.Model):
 
 
 class ShippingLocation(models.Model):
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    order_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
     st_name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -66,6 +66,7 @@ class ShippingLocation(models.Model):
     country = models.CharField(max_length=100)
     receipent_name = models.CharField(max_length=100)
     phone_no = models.CharField(max_length=30)
+    is_active = models.BooleanField(default=False)
 
     def __str__(self):
         parts = []
@@ -77,4 +78,4 @@ class ShippingLocation(models.Model):
         if self.country:
             parts.append(self.country)
 
-        return f"{self.user}'s shipping location : {', '.join(parts)}"
+        return f"{self.order_user}'s shipping location : {', '.join(parts)} received by {self.receipent_name}"

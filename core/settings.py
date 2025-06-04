@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from datetime import timedelta
 from pathlib import Path
 
+from django.contrib.auth.signals import user_logged_in
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,7 +28,19 @@ SECRET_KEY = "django-insecure-3qfz3la)&4w1grv*n6gbt&4*8=!4e@dp7(_t9nf%nne534mgqn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+def jwt_response_payload_handler(token, user=None, request=None):
+    if user and request:
+        user_logged_in.send(sender=user.__class__, request=request, user=user)
+
+    return {"token": token}
+
+
 ALLOWED_HOSTS = []
+
+JWT_AUTH = {
+    "JWT_RESPONSE_PAYLOAD_HANDLER": jwt_response_payload_handler,
+}
 
 
 # Application definition
@@ -42,7 +56,7 @@ INSTALLED_APPS = [
     "django_rename_app",
     "rest_framework_simplejwt",
     "rest_framework",
-    "cart",
+    "cart.apps.CartConfig",
     # "commerce",
     "commerce.apps.CommerceConfig",
     "order.apps.OrderConfig",
@@ -70,6 +84,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "TOKEN_OBTAIN_SERIALIZER": "users.serializers.MyTokenObtainPairSerializer",
 }
 
 ROOT_URLCONF = "core.urls"
