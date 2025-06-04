@@ -29,6 +29,9 @@ class Order(models.Model):
     )
     transaction_id = models.UUIDField(default=uuid4())
 
+    def __str__(self):
+        return f"{self.user} | {self.order_id} | {self.status} | {self.transaction_id}"
+
 
 class OrderItem(models.Model):
     from product.models import ProductVariant
@@ -43,7 +46,7 @@ class OrderItem(models.Model):
         return self.price * self.quantity
 
     def __str__(self):
-        return f"{self.quantity} x  in Order {self.order.order_id}"
+        return f"{self.id} | {self.product.product.name} | {self.quantity} | {self.price} | {self.price_subtotal}"
 
 
 class OrderHistory(models.Model):
@@ -58,7 +61,7 @@ class OrderHistory(models.Model):
 
 
 class ShippingLocation(models.Model):
-    order_user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     item = models.ForeignKey(OrderItem, on_delete=models.CASCADE)
     st_name = models.CharField(max_length=100)
     city = models.CharField(max_length=100)
@@ -78,4 +81,4 @@ class ShippingLocation(models.Model):
         if self.country:
             parts.append(self.country)
 
-        return f"{self.order_user}'s shipping location : {', '.join(parts)} received by {self.receipent_name}"
+        return f"{self.id} | {self.user}'s shipping location : {', '.join(parts)} received by {self.receipent_name}"

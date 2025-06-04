@@ -7,7 +7,19 @@ class OrderHistoryAdmin(admin.ModelAdmin):
     list_display = ["order", "completed_by", "completed_at"]
 
 
-admin.site.register([Order, OrderItem, ShippingLocation])
+class ShippingLocationAdmin(admin.ModelAdmin):
+    list_display = [
+        "recepient_name",
+        "phone_no",
+        "st_name",
+        "city",
+        "province",
+        "country",
+    ]
+
+
+admin.site.register([Order, OrderItem])
 admin.site.register(OrderHistory, OrderHistoryAdmin)
+admin.site.register(ShippingLocation)
 
 # Register your models here.
