@@ -29,6 +29,7 @@ SECRET_KEY = "django-insecure-3qfz3la)&4w1grv*n6gbt&4*8=!4e@dp7(_t9nf%nne534mgqn
 DEBUG = True
 
 
+# Handle signals
 def jwt_response_payload_handler(token, user=None, request=None):
     if user and request:
         user_logged_in.send(sender=user.__class__, request=request, user=user)
