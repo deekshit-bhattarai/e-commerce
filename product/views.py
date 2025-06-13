@@ -2,6 +2,7 @@ from django_filters import rest_framework as filters
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from merchant.permissions import IsMerchant
 
 from .filters import ProductFilter
 from .models import Category, Product, ProductVariant
@@ -33,7 +34,7 @@ class CategoryListViewSet(viewsets.ModelViewSet):
 
 class ProductVariantViewSet(viewsets.ModelViewSet):
     queryset = ProductVariant.objects.all().select_related("product")
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsMerchant]
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = ProductFilter
 
@@ -63,18 +64,20 @@ class ProductVariantViewSet(viewsets.ModelViewSet):
 
 class ProductListViewSet(viewsets.ModelViewSet):
     queryset = ProductVariant.objects.all().order_by("pk")
-    permission_classes = [
-        permissions.IsAuthenticated,
-    ]
+    # permission_classes = [ IsMerchant ]
+    serializer_class = ProductVariantReadSerializer
 
-    def get_serializer_class(self):
-        if self.action in ["list", "retrieve"]:
-            return ProductVariantReadSerializer
-        if self.action in ["create", "update", "partial_update"]:
-            return ProductVariantWriteSerializer
+    def get_permissions(self):
+        if self.action == 'list' or self.action == 'retrieve':
+            permission_classes = [permissions.AllowAny]
+        elif self.action in ['create', 'update', 'partial_update', 'destroy']:
+            permission_classes = [IsMerchant]
+        else:
+            permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        return super().get_queryset()
+        return [permission() for permission in permission_classes]
+
+    
 
 
 class ProductThumbnailListViewSet(viewsets.ModelViewSet):

@@ -1,6 +1,11 @@
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils.text import slugify
+from django.db.models import Avg
+
+from merchant.models import Merchant
+# from product.models import Product, ProductVariant
+
 
 
 class Category(models.Model):
@@ -50,6 +55,7 @@ class Product(models.Model):
     discount_price = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    uploaded_by = models.ForeignKey(Merchant, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ["-created_at"]
@@ -105,3 +111,5 @@ class ProductVariant(models.Model):
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     images = models.FileField("API/product_images", max_length=100, null=True)
+
+
