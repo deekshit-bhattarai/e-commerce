@@ -58,12 +58,11 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework",
     "cart.apps.CartConfig",
-    # "commerce",
     "commerce.apps.CommerceConfig",
     "order.apps.OrderConfig",
-    # "order",
     "product",
     "users",
+    "merchant"
 ]
 
 MIDDLEWARE = [
