@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.http import Http404
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
@@ -26,12 +27,16 @@ class MerchantView(viewsets.ModelViewSet):
 
     @action(detail = True, methods = ["post"], url_path="add-to-group")
     def add_to_group(self, request, *args, **kwargs):
-        merchant = self.get_object()
+
+        try:
+            merchant = self.get_object()
+        except Http404:
+            return Response({'error' : 'Merchant not found'}, status=status.HTTP_404_NOT_FOUND)
+
         user = merchant.owner
         group_name = request.data.get('group')
         try:
             group = Group.objects.get(name=group_name)
-            breakpoint()
             user.groups.add(group)
             return Response({"status" : "user added to group"})
         except Group.DoesNotExist:
