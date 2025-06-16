@@ -13,7 +13,6 @@ class CartService:
                 cart, created = Cart.objects.get_or_create(user=user_profile)
                 return cart
 
-        breakpoint()
         cart_id = request.session.get("cart_id")
         # breakpoint()
         if not request.session.get("cart_id"):
