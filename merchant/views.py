@@ -24,7 +24,12 @@ class MerchantView(viewsets.ModelViewSet):
     serializer_class = MerchantSerializer
     permission_classes = [IsSuperUser | IsMerchant]
 
-    @action(detail=True, methods=["post"], url_path="add-to-group")
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsSuperUser],
+        url_path="add-to-group",
+    )
     def add_to_group(self, request, *args, **kwargs):
         try:
             merchant = self.get_object()
