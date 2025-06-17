@@ -24,7 +24,7 @@ class CategoryReadSerializer(serializers.ModelSerializer):
 class CategoryWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ["name", "description", "parent"]
+        fields = ["id", "name", "description", "parent"]
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):
@@ -188,12 +188,21 @@ class ProductVariantForCartSerializer(serializers.ModelSerializer):
         ]
 
 
-# class ProductWriteSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Product
-#         fields = ["name", "description", "stock", "category"]
-#
-#     def validate_price(self, value):
-#         if value <= 0:
-#             raise serializers.ValidationError("The price must be above 0")
-#         return value
+class ProductWriteSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
+
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "name",
+            "category",
+            "description",
+            "on_discount",
+            "discount_price",
+        ]
+
+    def validate_price(self, value):
+        if value <= 0:
+            raise serializers.ValidationError("The price must be above 0")
+        return value
