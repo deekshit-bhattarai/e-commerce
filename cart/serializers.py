@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import CartItem, Cart
-from product.models import  Product, ProductVariant
+from product.models import Product, ProductVariant
 from product.serializers import CategoryReadSerializer
 
 
@@ -113,7 +113,6 @@ class CartWriteSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance.cart_id = validated_data.get("cart_id", instance.cart_id)
         instance.save()
-        breakpoint()
 
         # Change this line:
         incoming_items_data = validated_data.pop("items", None)

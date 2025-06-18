@@ -17,7 +17,7 @@ from .serializers import (
 
 class CategoryListViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().filter(parent__isnull=True)
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -68,16 +68,14 @@ class ProductListViewSet(viewsets.ModelViewSet):
     serializer_class = ProductVariantReadSerializer
 
     def get_permissions(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == "list" or self.action == "retrieve":
             permission_classes = [permissions.AllowAny]
-        elif self.action in ['create', 'update', 'partial_update', 'destroy']:
+        elif self.action in ["create", "update", "partial_update", "destroy"]:
             permission_classes = [IsMerchant]
         else:
             permission_classes = [permissions.IsAuthenticated]
 
         return [permission() for permission in permission_classes]
-
-    
 
 
 class ProductThumbnailListViewSet(viewsets.ModelViewSet):

@@ -1,4 +1,3 @@
-
 from merchant.views import MerchantView, SubUserViewSet
 from rest_framework import routers
 
