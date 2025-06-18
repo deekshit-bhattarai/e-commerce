@@ -9,7 +9,7 @@ urlpatterns = [
         name="admin-get-product-variant",
     ),
     path(
-        "product-variants/<int:pk>",
+        "product-variants/<int:pk>/",
         ProductVariantAdminView.as_view(),
         name="admin-get-product-variant",
     ),
