@@ -37,7 +37,7 @@ class ProductVariantAdminView(
         else:
             products = self.get_queryset()
             serializer = self.get_serializer(products, many=True)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         product = request.data
