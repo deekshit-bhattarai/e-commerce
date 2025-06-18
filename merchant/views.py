@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from typing import Any
 from django.http import Http404
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -30,7 +31,7 @@ class MerchantView(viewsets.ModelViewSet):
         permission_classes=[IsSuperUser],
         url_path="add-to-group",
     )
-    def add_to_group(self, request, *args, **kwargs):
+    def add_to_group(self, request, *args, **kwargs) -> Response:
         try:
             merchant = self.get_object()
         except Http404:
@@ -39,7 +40,7 @@ class MerchantView(viewsets.ModelViewSet):
             )
 
         user = merchant.owner
-        group_name = request.data.get("group")
+        group_name: Any = request.data.get("group")
         try:
             group = Group.objects.get(name=group_name)
             user.groups.add(group)
