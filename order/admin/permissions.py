@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from typing import Any
 
 
 class IsAdminUser(permissions.BasePermission):
@@ -7,7 +8,7 @@ class IsAdminUser(permissions.BasePermission):
 
 
 class IsSuperAdminUser(permissions.BasePermission):
-    def has_permission(self, request, view):
+    def has_permission(self, request, view) -> Any:
         return (
             request.user
             and request.user.is_authenticated

@@ -1,3 +1,4 @@
+from typing import Literal
 from rest_framework import permissions
 from .models import Cart
 
@@ -8,7 +9,7 @@ class IsOwnerOfCart(permissions.BasePermission):
     Allows anonymous users to access their session-based cart.
     """
 
-    def has_object_permission(self, request, view, obj):
+    def has_object_permission(self, request, view, obj) -> bool:
         if request.method in permissions.SAFE_METHODS:
             return True
 
@@ -18,7 +19,7 @@ class IsOwnerOfCart(permissions.BasePermission):
                 and obj.user == request.user.profile
             ):
                 return True
-        session_cart_id = request.session.get("cart_id")
+        session_cart_id: str = request.session.get("cart_id")
         if (
             not request.user.is_authenticated
             and session_cart_id
@@ -28,8 +29,7 @@ class IsOwnerOfCart(permissions.BasePermission):
 
         return False
 
-    def has_permission(self, request, view):
+    def has_permission(self, request, view) -> Literal[True]:
         if request.method == "POST":
             return True
-
         return True

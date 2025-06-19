@@ -7,7 +7,6 @@ from merchant.models import Merchant
 # from product.models import Product, ProductVariant
 
 
-
 class Category(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -61,29 +60,29 @@ class Product(models.Model):
         ordering = ["-created_at"]
 
     @property
-    def in_stock(self):
+    def in_stock(self) -> bool:
         return self.variants.filter(stock__gt=0).exists()
 
-    def total_number_of_comment(self):
+    def total_number_of_comment(self) -> int:
         from commerce.models import UserComment
 
         return UserComment.objects.filter(product=self).count()
 
     #
-    def total_number_of_review(self):
+    def total_number_of_review(self) -> int:
         from commerce.models import UserReview
 
         return UserReview.objects.filter(product=self).count()
 
     #
-    def average_product_review(self):
+    def average_product_review(self) -> float:
         from commerce.models import UserReview
 
         return UserReview.objects.filter(product=self).aggregate(Avg("stars"))[
             "stars__avg"
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -104,12 +103,10 @@ class ProductVariant(models.Model):
             )
         ]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.product.name}"
 
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     images = models.FileField("API/product_images", max_length=100, null=True)
-
-

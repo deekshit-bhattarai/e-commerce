@@ -13,9 +13,15 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_merchant = models.BooleanField(default=False)
-    belongs_to = models.CharField(max_length=100, null = True, blank = True)
+    belongs_to = models.CharField(max_length=100, null=True, blank=True)
     date_joined = models.DateTimeField(default=timezone.now)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='sub_user')
+    parent = models.ForeignKey(
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="sub_user",
+    )
 
     # profile_image = models.ImageField("API/profile-images", default=)
 
@@ -24,5 +30,5 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.email

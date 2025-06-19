@@ -29,7 +29,7 @@ class Order(models.Model):
     )
     transaction_id = models.UUIDField(default=uuid4())
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user} | {self.order_id} | {self.status} | {self.transaction_id}"
 
 
@@ -42,10 +42,10 @@ class OrderItem(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     @property
-    def price_subtotal(self):
+    def price_subtotal(self) -> float:
         return self.price * self.quantity
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.id} | {self.product.product.name} | {self.quantity} | {self.price} | {self.price_subtotal}"
 
 
@@ -56,7 +56,7 @@ class OrderHistory(models.Model):
     completed_by = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     completed_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Log for {self.order.order_id}"
 
 
@@ -71,7 +71,7 @@ class ShippingLocation(models.Model):
     phone_no = models.CharField(max_length=30)
     is_active = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         parts = []
         parts.append(self.st_name)
         if self.city:

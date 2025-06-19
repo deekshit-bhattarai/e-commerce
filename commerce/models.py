@@ -44,7 +44,7 @@ class UserComment(models.Model):
     object_id = models.PositiveBigIntegerField()
     content_object = GenericForeignKey("content_type", "object_id")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.comment_user.user} | {self.content_type}"
 
 
@@ -60,7 +60,7 @@ class UserReview(models.Model):
         related_name="user_product_review",
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.review_user.user}'s Review"
 
 

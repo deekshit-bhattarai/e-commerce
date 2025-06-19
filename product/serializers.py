@@ -202,7 +202,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
             "discount_price",
         ]
 
-    def validate_price(self, value):
+    def validate_price(self, value) -> float:
         if value <= 0:
             raise serializers.ValidationError("The price must be above 0")
         return value

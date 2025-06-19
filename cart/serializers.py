@@ -27,7 +27,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             "category",
         ]
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> CartItem:
         cart = self.context.get("cart")
         if not cart:
             raise serializers.ValidationError(
@@ -80,7 +80,7 @@ class CartWriteSerializer(serializers.ModelSerializer):
         model = Cart
         fields = ["cart_id", "total_price", "items", "created_at", "updated_at"]
 
-    def create(self, validated_data):
+    def create(self, validated_data) -> Cart:
         # breakpoint()
         items_data = validated_data.pop("items", [])
         cart = Cart.objects.create(**validated_data)
@@ -100,7 +100,7 @@ class CartWriteSerializer(serializers.ModelSerializer):
                 )
 
             try:
-                product = ProductVariant.objects.get(id=product_id)
+                product: ProductVariant = ProductVariant.objects.get(id=product_id)
             except ProductVariant.DoesNotExist:
                 raise serializers.ValidationError(
                     f"Product Variant with ID {product_id} doesn't exist"

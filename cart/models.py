@@ -1,4 +1,5 @@
 import uuid
+from typing import Any
 
 from django.db import models
 
@@ -14,17 +15,17 @@ class Cart(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.user:
             return f"{self.user}'s Cart"
         return f"Anonymous Cart {self.cart_id}"
 
     @property
-    def total_price(self):
+    def total_price(self) -> float:
         return sum(item.item_subtotal for item in self.cartitem_set.all())
 
     @property
-    def items(self):
+    def items(self) -> Any:
         return self.cartitem_set.all()
 
 
@@ -34,16 +35,13 @@ class CartItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
 
     @property
-    def item_subtotal(self):
+    def item_subtotal(self) -> float:
         return self.product.price * self.quantity
 
-    def __str__(self):
+    def __str__(self) -> str:
         user_info = (
             self.cart.user.user.email
             if self.cart.user and hasattr(self.cart.user, "user")
             else "anonymous"
         )
         return f"{self.quantity} x {self.product.product.name} in cart of {user_info}"
-
-
-# Create your models here.

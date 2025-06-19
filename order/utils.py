@@ -1,12 +1,12 @@
 from uuid import uuid4
 
 
-def generate_od_uuid():
+def generate_od_uuid() -> str:
     """
     Generates a random 8-character string prefixed with 'od_'.
 
     Uses UUID4 to generate a random UUID, takes the first 8 characters
-    of its hexadecimal representation, and prepends 'od_'.
+    of its hexadecimal repres}entation, and prepends 'od_'.
 
     Returns:
         str: A string in the format 'od_xxxxxxxx' where xxxxxxxx is

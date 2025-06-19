@@ -22,7 +22,7 @@ class ProductVariantAdminView(
     queryset = ProductVariant.objects.all()
     serializer_class = ProductAdminSerializer
 
-    def get(self, request, pk=None):
+    def get(self, request, pk=None) -> Response:
         if pk is not None:
             try:
                 product = self.get_queryset().get(pk=pk)
@@ -64,10 +64,10 @@ class ProductVariantAdminView(
         self.perform_update(serializer)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def patch(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs) -> Response:
         return self.partial_update(request, *args, **kwargs)
 
-    def delete(self, request, pk=None, *args, **kwargs):
+    def delete(self, request, pk=None, *args, **kwargs) -> Response:
         try:
             instance = self.get_object()
             self.perform_destroy(instance)

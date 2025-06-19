@@ -16,7 +16,7 @@ class AdminOrderViewSet(ListModelMixin, UpdateModelMixin, viewsets.GenericViewSe
     permission_classes = [IsSuperAdminUser]
     lookup_field = "order_id"
 
-    def get(self, request, pk=None, *args, **kwargs):
+    def get(self, request, pk=None, *args, **kwargs) -> Response:
         if pk is not None:
             try:
                 order = self.get_queryset().get(pk=pk)
@@ -39,5 +39,5 @@ class AdminOrderViewSet(ListModelMixin, UpdateModelMixin, viewsets.GenericViewSe
                 status=status.HTTP_200_OK,
             )
 
-    def patch(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs) -> Response:
         return self.partial_update(request, *args, **kwargs)

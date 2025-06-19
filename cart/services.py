@@ -6,15 +6,14 @@ from product.models import ProductVariant
 
 class CartService:
     @staticmethod
-    def get_or_create_cart(request):
+    def get_or_create_cart(request) -> Cart:
         if request.user.is_authenticated:
             user_profile = getattr(request.user, "userprofile", None)
             if user_profile:
                 cart, created = Cart.objects.get_or_create(user=user_profile)
                 return cart
 
-        cart_id = request.session.get("cart_id")
-        # breakpoint()
+        cart_id: str = request.session.get("cart_id")
         if not request.session.get("cart_id"):
             cart_id = str(uuid4())
             request.session["cart_id"] = cart_id
@@ -27,7 +26,7 @@ class CartService:
         return cart
 
     @staticmethod
-    def transfer_anonymous_cart_to_user(request, user_profile):
+    def transfer_anonymous_cart_to_user(request, user_profile) -> Cart | None:
         cart_id = request.session.get("cart_id")
         if not cart_id:
             return None
@@ -54,7 +53,7 @@ class CartService:
             return Cart.objects.get_or_create(user=user_profile)[0]
 
     @staticmethod
-    def add_to_cart(request, product_variant_id, quantity=1):
+    def add_to_cart(request, product_variant_id, quantity=1) -> CartItem:
         try:
             product_variant = ProductVariant.objects.get(id=product_variant_id)
             cart = CartService.get_or_create_cart(request)

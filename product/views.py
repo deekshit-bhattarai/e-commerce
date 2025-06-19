@@ -44,7 +44,7 @@ class ProductVariantViewSet(viewsets.ModelViewSet):
         return ProductVariantWriteSerializer
 
     @action(detail=False, methods=["get"])
-    def by_product(self, request, pk=None):
+    def by_product(self, request, pk=None) -> Response:
         product_id = request.query_params.get("product_id")
         if not product_id:
             return Response(
